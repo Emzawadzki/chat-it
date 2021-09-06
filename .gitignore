@@ -108,3 +108,5 @@ server/build/*
 
 # database config
 ormconfig.json
+
+*.env
