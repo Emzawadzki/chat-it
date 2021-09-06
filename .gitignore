@@ -105,3 +105,6 @@ dist
 
 # server build files
 server/build/*
+
+# database config
+ormconfig.json
