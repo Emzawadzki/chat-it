@@ -1,0 +1,20 @@
+{
+  "name": "chat-it",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Emzawadzki/chat-it.git"
+  },
+  "keywords": ["chat", "websockets", "socket.io", "react"],
+  "author": "Emzawadzki",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Emzawadzki/chat-it/issues"
+  },
+  "homepage": "https://github.com/Emzawadzki/chat-it#readme"
+}
