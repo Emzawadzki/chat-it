@@ -30,6 +30,7 @@ createConnection({
     server.use(express.json());
 
     server.post("/login", AuthController.login);
+    server.post("/register", AuthController.register);
 
     server.listen(5000, () => {
       console.log("Server listening on port 5000...");
