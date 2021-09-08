@@ -1,9 +1,12 @@
 import "reflect-metadata";
 import dotenv from "dotenv";
-
+import express from "express";
+import * as bodyParser from "body-parser";
 import { createConnection } from "typeorm";
 
 import { User } from "./entity/User";
+
+import { AuthController } from "./controllers/AuthController";
 
 // @TODO: handle different environments
 dotenv.config({ path: "../development.env" });
@@ -21,7 +24,15 @@ createConnection({
   synchronize: true,
   logging: false,
 })
-  .then((connection) => {
-    // ...
+  .then(() => {
+    const server = express();
+
+    server.use(express.json());
+
+    server.post("/login", AuthController.login);
+
+    server.listen(5000, () => {
+      console.log("Server listening on port 5000...");
+    });
   })
   .catch((error) => console.log(error));
