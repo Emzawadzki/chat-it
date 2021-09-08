@@ -2,8 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import { getRepository } from "typeorm";
 
 import { User } from "../entity/User";
+import { BaseController } from "./BaseController";
 
-export class AuthController {
+export class AuthController extends BaseController {
   static login = async (
     request: Request,
     response: Response,
@@ -21,7 +22,8 @@ export class AuthController {
       if (!userFound) {
         return response.status(401).send();
       }
-      return response.status(200).send();
+      const token = this.encodeJWT({ username });
+      return response.status(200).json({ token }).send();
     } catch (e) {
       next(e);
     }
