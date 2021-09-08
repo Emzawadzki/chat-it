@@ -6,6 +6,7 @@ import { createConnection } from "typeorm";
 import { User } from "./entity/User";
 
 import { AuthController } from "./controllers/AuthController";
+import { UserController } from "./controllers/UserController";
 
 // @TODO: handle different environments
 dotenv.config({ path: "../development.env" });
@@ -30,6 +31,7 @@ createConnection({
 
     server.post("/login", AuthController.login);
     server.post("/register", AuthController.register);
+    server.get("/user", UserController.getUser);
 
     server.listen(5000, () => {
       console.log("Server listening on port 5000...");
