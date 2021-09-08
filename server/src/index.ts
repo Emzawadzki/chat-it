@@ -1,7 +1,6 @@
 import "reflect-metadata";
 import dotenv from "dotenv";
 import express from "express";
-import * as bodyParser from "body-parser";
 import { createConnection } from "typeorm";
 
 import { User } from "./entity/User";
