@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
+import { getRepository } from "typeorm";
 
+import { User } from "../entity/User";
 import { BaseController } from "./BaseController";
 
 export class UserController extends BaseController {
@@ -23,8 +25,16 @@ export class UserController extends BaseController {
         // invalid token
         return response.status(401).send();
       }
-      const { username } = payload;
-      response.status(200).json({ username });
+      const userRepository = getRepository(User);
+
+      const userFound = await userRepository.findOne({
+        where: { username: payload.username },
+      });
+      if (!userFound) {
+        return response.status(401).send();
+      }
+      const { username, id } = userFound;
+      response.status(200).json({ username, id });
     } catch (e) {
       return next(e);
     }

@@ -22,7 +22,8 @@ export class AuthController extends BaseController {
       if (!userFound) {
         return response.status(401).send();
       }
-      const token = this.encodeJWT({ username });
+      const { id } = userFound;
+      const token = this.encodeJWT({ username, id });
       return response.status(200).json({ token }).send();
     } catch (e) {
       next(e);
@@ -45,8 +46,9 @@ export class AuthController extends BaseController {
       if (userFound) {
         return response.status(409).send();
       }
-      userRepository.save({ username });
-      const token = this.encodeJWT({ username });
+      const createdUser = await userRepository.save({ username });
+      const { id } = createdUser;
+      const token = this.encodeJWT({ username, id });
       return response.status(201).json({ token }).send();
     } catch (e) {
       next(e);
