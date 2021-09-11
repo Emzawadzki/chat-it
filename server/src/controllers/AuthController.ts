@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { getRepository } from "typeorm";
 
 import { User } from "../entity/User";
+import { encodeJWT } from "../utils/jwt";
 import { BaseController } from "./BaseController";
 
 export class AuthController extends BaseController {
@@ -23,7 +24,7 @@ export class AuthController extends BaseController {
         return response.status(401).send();
       }
       const { id } = userFound;
-      const token = this.encodeJWT({ username, id });
+      const token = encodeJWT({ username, id });
       return response.status(200).json({ token }).send();
     } catch (e) {
       next(e);
@@ -48,7 +49,7 @@ export class AuthController extends BaseController {
       }
       const createdUser = await userRepository.save({ username });
       const { id } = createdUser;
-      const token = this.encodeJWT({ username, id });
+      const token = encodeJWT({ username, id });
       return response.status(201).json({ token }).send();
     } catch (e) {
       next(e);
