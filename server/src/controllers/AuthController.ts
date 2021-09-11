@@ -46,7 +46,8 @@ export class AuthController extends BaseController {
         return response.status(409).send();
       }
       userRepository.save({ username });
-      return response.status(201).send();
+      const token = this.encodeJWT({ username });
+      return response.status(201).json({ token }).send();
     } catch (e) {
       next(e);
     }
