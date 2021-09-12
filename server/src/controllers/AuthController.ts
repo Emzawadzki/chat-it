@@ -52,8 +52,7 @@ export class AuthController extends BaseController {
       if (userFound) {
         return response.status(409).send();
       }
-      const salt = await bcrypt.genSalt();
-      const hashedPassword = await bcrypt.hash(password, salt);
+      const hashedPassword = await bcrypt.hash(password, 10);
       const createdUser = await userRepository.save({
         username,
         password: hashedPassword,
