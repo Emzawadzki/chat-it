@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { getRepository } from "typeorm";
+import bcrypt from "bcryptjs";
 
 import { User } from "../entity/User";
 import { encodeJWT } from "../utils/jwt";
@@ -12,8 +13,8 @@ export class AuthController extends BaseController {
     next: NextFunction
   ) => {
     try {
-      const { username } = request.body;
-      if (!username) {
+      const { username, password: plainPassword } = request.body;
+      if (!username || !plainPassword) {
         return response.status(400).send();
       }
 
@@ -23,7 +24,11 @@ export class AuthController extends BaseController {
       if (!userFound) {
         return response.status(401).send();
       }
-      const { id } = userFound;
+      const { id, password } = userFound;
+      const isPasswordCorrect = await bcrypt.compare(plainPassword, password);
+      if (!isPasswordCorrect) {
+        return response.status(401).send();
+      }
       const token = encodeJWT({ username, id });
       return response.status(200).json({ token }).send();
     } catch (e) {
@@ -37,8 +42,8 @@ export class AuthController extends BaseController {
     next: NextFunction
   ) => {
     try {
-      const { username } = request.body;
-      if (!username) {
+      const { username, password } = request.body;
+      if (!username || !password) {
         return response.status(400).send();
       }
 
@@ -47,7 +52,12 @@ export class AuthController extends BaseController {
       if (userFound) {
         return response.status(409).send();
       }
-      const createdUser = await userRepository.save({ username });
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(password, salt);
+      const createdUser = await userRepository.save({
+        username,
+        password: hashedPassword,
+      });
       const { id } = createdUser;
       const token = encodeJWT({ username, id });
       return response.status(201).json({ token }).send();

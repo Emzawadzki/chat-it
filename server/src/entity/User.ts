@@ -9,4 +9,9 @@ export class User {
     length: 32,
   })
   username: string;
+
+  @Column({
+    length: 60,
+  })
+  password: string;
 }
