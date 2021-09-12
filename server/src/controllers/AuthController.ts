@@ -1,17 +1,18 @@
-import { NextFunction, Request, Response } from "express";
+import { RequestHandler } from "express";
 import { getRepository } from "typeorm";
 import bcrypt from "bcryptjs";
 
 import { User } from "../entity/User";
 import { encodeJWT } from "../utils/jwt";
+import { RequestBody, ResponseBody } from "../types/http";
 import { BaseController } from "./BaseController";
 
 export class AuthController extends BaseController {
-  static login = async (
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ) => {
+  static login: RequestHandler<
+    {},
+    ResponseBody.UserToken,
+    RequestBody.UserCredentials
+  > = async (request, response, next) => {
     try {
       const { username, password: plainPassword } = request.body;
       if (!username || !plainPassword) {
@@ -36,11 +37,11 @@ export class AuthController extends BaseController {
     }
   };
 
-  static register = async (
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ) => {
+  static register: RequestHandler<
+    {},
+    ResponseBody.UserToken,
+    RequestBody.UserCredentials
+  > = async (request, response, next) => {
     try {
       const { username, password } = request.body;
       if (!username || !password) {

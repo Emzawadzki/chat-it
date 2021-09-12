@@ -1,15 +1,15 @@
-import { NextFunction, Request, Response } from "express";
+import { RequestHandler } from "express";
 import { getRepository } from "typeorm";
 
 import { User } from "../entity/User";
+import { RequestParameters, ResponseBody } from "../types/http";
 import { BaseController } from "./BaseController";
 
 export class UserController extends BaseController {
-  static getUser = async (
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ) => {
+  static getUser: RequestHandler<
+    RequestParameters.Authorized,
+    ResponseBody.UserData
+  > = async (request, response, next) => {
     try {
       const userRepository = getRepository(User);
       if (!request.username) {
