@@ -30,11 +30,16 @@ createConnection({
 
     server.use(express.json());
 
-    server.post("/login", AuthController.login);
-    server.post("/register", AuthController.register);
+    const openRouter = express.Router();
+    openRouter.post("/login", AuthController.login);
+    openRouter.post("/register", AuthController.register);
 
-    // Protected routes
-    server.get("/user", authMiddleware, UserController.getUser);
+    const protectedRouter = express.Router();
+    protectedRouter.use(authMiddleware);
+    protectedRouter.get("/user", UserController.getUser);
+
+    server.use("/", openRouter);
+    server.use("/", protectedRouter);
 
     server.listen(5000, () => {
       console.log("Server listening on port 5000...");
