@@ -104,7 +104,7 @@ dist
 .tern-port
 
 # server build files
-server/build/*
+build/
 
 # database config
 ormconfig.json
