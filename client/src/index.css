@@ -1,3 +1,26 @@
 :root {
-  --color-primary: tomato;
+  --color-primary-100: #ff6d00;
+  --color-primary-200: #ff7900;
+  --color-primary-300: #ff8500;
+  --color-primary-400: #ff9100; /* inversed text color */
+  --color-primary-500: #ff9e00; /* inversed text color */
+  --color-secondary-100: #240046;
+  --color-secondary-200: #3c096c;
+  --color-secondary-300: #5a189a;
+  --color-secondary-400: #7b2cbf;
+  --color-secondary-500: #9d4edd;
+  --color-text: #eee;
+  --color-text-inversed: #111;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
 }

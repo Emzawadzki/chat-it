@@ -1,0 +1,38 @@
+.Header {
+  background-color: var(--color-secondary-100);
+}
+
+.Header__list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.Header__list-item {
+  background-color: var(--color-secondary-100);
+  display: inline-block;
+}
+
+.Header__list-item:hover {
+  background-color: var(--color-secondary-200);
+  transition: 0.3s background-color;
+}
+
+.Header__link {
+  color: var(--color-text);
+  display: block;
+  padding: 1rem 1.5rem;
+  position: relative;
+  text-decoration: none;
+}
+
+.Header__link.active:before {
+  display: block;
+  content: "";
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  right: 0.5rem;
+  height: 2px;
+  background-color: var(--color-text);
+}
