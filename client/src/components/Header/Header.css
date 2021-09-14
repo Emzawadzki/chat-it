@@ -24,6 +24,13 @@
   padding: 1rem 1.5rem;
   position: relative;
   text-decoration: none;
+  border: 2px solid transparent;
+  transition: 0.3s border-color;
+}
+
+.Header__link:focus {
+  outline: none;
+  border: 2px inset var(--color-primary-100);
 }
 
 .Header__link.active:before {
