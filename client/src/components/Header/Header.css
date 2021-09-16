@@ -1,5 +1,8 @@
 .Header {
   background-color: var(--color-secondary-100);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .Header__list {
@@ -42,4 +45,9 @@
   right: 0.5rem;
   height: 2px;
   background-color: var(--color-text);
+}
+
+.Header__user-info {
+  color: var(--color-text);
+  padding: 0 1.5rem;
 }

@@ -1,28 +1,26 @@
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import { Header } from "./components/Header";
-import { Home } from "./pages/Home";
-import { Register } from "./pages/Register";
+import { RouteManager } from "./RouteManager";
 
 import "./normalize.css";
 import './App.css';
 
 const queryClient = new QueryClient()
 
-const App: React.FC = () => (
-  <Router>
-    <Header />
-    <main className="main">
-      <QueryClientProvider client={queryClient}>
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/register" component={Register} />
-        </Switch>
-      </QueryClientProvider>
-    </main>
+const App: React.FC = () => {
+
+  return <Router>
+    <QueryClientProvider client={queryClient}>
+      <Header />
+      <main className="main">
+        <RouteManager />
+      </main>
+    </QueryClientProvider>
   </Router>
-);
+
+}
 
 
 export default App;
