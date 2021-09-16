@@ -7,16 +7,19 @@ export const authMiddleware = (
   response: Response,
   next: NextFunction
 ) => {
-  const authHeader = request.headers["authorization"];
+  const requestCookie = request.headers.cookie;
+  if (!requestCookie) {
+    return response.status(401).send();
+  }
+  const token = /access_token=([\w\.]+)/.exec(requestCookie);
 
-  const token = authHeader && authHeader.split(" ")[1];
-  if (!token) {
+  if (!token || !token[1]) {
     return response.status(401).send();
   }
 
   let payload;
   try {
-    payload = decodeJWT<{ username?: string }>(token);
+    payload = decodeJWT<{ username?: string }>(token[1]);
   } catch (e) {
     // invalid token
     return response.status(401).send();
