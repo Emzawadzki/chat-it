@@ -2,11 +2,12 @@ import { useQuery } from "react-query";
 import { NavLink } from "react-router-dom";
 
 import { AuthApi } from "../../api/AuthApi";
+import { QUERY } from "../../config/queries";
 
 import "./Header.css";
 
 export const Header: React.FC = () => {
-    const { isLoading, data } = useQuery("user", AuthApi.getUser);
+    const { isLoading, data } = useQuery(QUERY.USER, AuthApi.getUser);
 
     const username = data ? data.username : "Guest"
     const userInfo = isLoading ? "Loading ..." : `Hello, ${username}!`
