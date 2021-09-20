@@ -33,7 +33,7 @@ createConnection({
     const openRouter = express.Router();
     openRouter.post("/login", AuthController.login);
     openRouter.post("/register", AuthController.register);
-    openRouter.get("/logout", AuthController.logout);
+    openRouter.post("/logout", AuthController.logout);
     openRouter.get("/user", UserController.getUser);
 
     const protectedRouter = express.Router();
