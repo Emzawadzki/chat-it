@@ -13,16 +13,16 @@ export class UserController extends BaseController {
     try {
       const userRepository = getRepository(User);
       if (!request.username) {
-        return response.status(401).send();
+        return response.status(200).json({ user: null });
       }
       const userFound = await userRepository.findOne({
         where: { username: request.username },
       });
       if (!userFound) {
-        return response.status(401).send();
+        return response.status(200).json({ user: null });
       }
       const { username, id } = userFound;
-      response.status(200).json({ username, id });
+      response.status(200).json({ user: { name: username, id } });
     } catch (e) {
       return next(e);
     }

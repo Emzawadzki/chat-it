@@ -17,7 +17,9 @@ export namespace ResponseBody {
     token: string;
   }
   export interface UserData {
-    username: string;
-    id: number;
+    user: {
+      name: string;
+      id: number;
+    } | null;
   }
 }

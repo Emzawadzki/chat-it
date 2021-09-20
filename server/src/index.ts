@@ -33,10 +33,10 @@ createConnection({
     const openRouter = express.Router();
     openRouter.post("/login", AuthController.login);
     openRouter.post("/register", AuthController.register);
+    openRouter.get("/user", UserController.getUser);
 
     const protectedRouter = express.Router();
     protectedRouter.use(authMiddleware);
-    protectedRouter.get("/user", UserController.getUser);
 
     server.use("/", openRouter);
     server.use("/", protectedRouter);
