@@ -1,6 +1,6 @@
 export namespace RequestParameters {
   export interface Authorized {
-    username?: string;
+    user?: UserData;
   }
 }
 
@@ -16,10 +16,7 @@ export namespace ResponseBody {
   export interface UserToken {
     token: string;
   }
-  export interface UserData {
-    user: {
-      name: string;
-      id: number;
-    } | null;
+  export interface User {
+    user: UserData | null;
   }
 }
