@@ -6,6 +6,7 @@ import { User } from "../entity/User";
 import { encodeJWT } from "../utils/jwt";
 import { TOKEN_COOKIE } from "../config/consts";
 import { RequestBody, ResponseBody } from "../types/http";
+import { getRequestUser } from "../utils/http";
 
 import { BaseController } from "./BaseController";
 
@@ -76,6 +77,23 @@ export class AuthController extends BaseController {
           // TODO: add secure for production
         })
         .status(201)
+        .send();
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  static logout: RequestHandler = (request, response, next) => {
+    try {
+      const requestUser = getRequestUser(request);
+      let responseStatus = requestUser ? 200 : 401;
+      return response
+        .cookie(TOKEN_COOKIE, "", {
+          httpOnly: true,
+          secure: true,
+          expires: new Date(0),
+        })
+        .status(responseStatus)
         .send();
     } catch (e) {
       next(e);
