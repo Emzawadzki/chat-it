@@ -13,7 +13,7 @@ import { BaseController } from "./BaseController";
 export class AuthController extends BaseController {
   static login: RequestHandler<
     {},
-    ResponseBody.UserToken,
+    ResponseBody.User,
     RequestBody.UserCredentials
   > = async (request, response, next) => {
     try {
@@ -28,16 +28,21 @@ export class AuthController extends BaseController {
       if (!userFound) {
         return response.status(401).send();
       }
-      const { id, password } = userFound;
+      const { id, password, username: name } = userFound;
       const isPasswordCorrect = await bcrypt.compare(plainPassword, password);
       if (!isPasswordCorrect) {
         return response.status(401).send();
       }
-      const token = encodeJWT({ username, id });
+      const token = encodeJWT({ username: name, id });
       return response
         .cookie(TOKEN_COOKIE, token, TOKEN_COOKIE_OPTIONS)
         .status(200)
-        .send();
+        .json({
+          user: {
+            id,
+            name,
+          },
+        });
     } catch (e) {
       next(e);
     }
@@ -45,7 +50,7 @@ export class AuthController extends BaseController {
 
   static register: RequestHandler<
     {},
-    ResponseBody.UserToken,
+    ResponseBody.User,
     RequestBody.UserCredentials
   > = async (request, response, next) => {
     try {
@@ -64,12 +69,17 @@ export class AuthController extends BaseController {
         username,
         password: hashedPassword,
       });
-      const { id } = createdUser;
+      const { id, username: name } = createdUser;
       const token = encodeJWT({ username, id });
       return response
         .cookie(TOKEN_COOKIE, token, TOKEN_COOKIE_OPTIONS)
         .status(201)
-        .send();
+        .json({
+          user: {
+            id,
+            name,
+          },
+        });
     } catch (e) {
       next(e);
     }
