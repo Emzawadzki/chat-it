@@ -24,5 +24,7 @@ export class AuthApi extends BaseApi {
   static login = async (body: LoginRequestBody) =>
     this.postRequest("/login", body);
 
+  static logout = async () => this.postRequest("/logout", {});
+
   static getUser = async () => this.getRequest<GetUserResponse>("/user");
 }
