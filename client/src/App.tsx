@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { Header } from "./components/Header";
 import { Home } from "./pages/Home";
 import { Register } from "./pages/Register";
+import { Login } from "./pages/Login";
 
 import "./normalize.css";
 import './App.css';
@@ -19,6 +20,7 @@ const App: React.FC = () => {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/register" component={Register} />
+          <Route exact path="/login" component={Login} />
         </Switch>
       </main>
     </QueryClientProvider>
