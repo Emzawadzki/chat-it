@@ -39,8 +39,8 @@ createConnection({
     const protectedRouter = express.Router();
     protectedRouter.use(authMiddleware);
 
-    server.use("/", openRouter);
-    server.use("/", protectedRouter);
+    server.use("/api", openRouter);
+    server.use("/api", protectedRouter);
 
     server.listen(5000, () => {
       console.log("Server listening on port 5000...");
