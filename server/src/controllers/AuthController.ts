@@ -36,6 +36,7 @@ export class AuthController extends BaseController {
       return response
         .cookie(TOKEN_COOKIE, token, {
           httpOnly: true,
+          secure: true,
           // TODO: add secure for production
         })
         .status(200)
@@ -71,6 +72,7 @@ export class AuthController extends BaseController {
       return response
         .cookie(TOKEN_COOKIE, token, {
           httpOnly: true,
+          secure: true,
           // TODO: add secure for production
         })
         .status(201)
