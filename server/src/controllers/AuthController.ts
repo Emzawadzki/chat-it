@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 
 import { User } from "../entity/User";
 import { encodeJWT } from "../utils/jwt";
-import { TOKEN_COOKIE } from "../config/consts";
+import { TOKEN_COOKIE, TOKEN_COOKIE_OPTIONS } from "../config/consts";
 import { RequestBody, ResponseBody } from "../types/http";
 import { getRequestUser } from "../utils/http";
 
@@ -35,11 +35,7 @@ export class AuthController extends BaseController {
       }
       const token = encodeJWT({ username, id });
       return response
-        .cookie(TOKEN_COOKIE, token, {
-          httpOnly: true,
-          secure: true,
-          // TODO: add secure for production
-        })
+        .cookie(TOKEN_COOKIE, token, TOKEN_COOKIE_OPTIONS)
         .status(200)
         .send();
     } catch (e) {
@@ -71,11 +67,7 @@ export class AuthController extends BaseController {
       const { id } = createdUser;
       const token = encodeJWT({ username, id });
       return response
-        .cookie(TOKEN_COOKIE, token, {
-          httpOnly: true,
-          secure: true,
-          // TODO: add secure for production
-        })
+        .cookie(TOKEN_COOKIE, token, TOKEN_COOKIE_OPTIONS)
         .status(201)
         .send();
     } catch (e) {
@@ -89,8 +81,7 @@ export class AuthController extends BaseController {
       let responseStatus = requestUser ? 200 : 401;
       return response
         .cookie(TOKEN_COOKIE, "", {
-          httpOnly: true,
-          secure: true,
+          ...TOKEN_COOKIE_OPTIONS,
           expires: new Date(0),
         })
         .status(responseStatus)
