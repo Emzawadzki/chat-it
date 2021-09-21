@@ -10,7 +10,17 @@ import { Login } from "./pages/Login";
 import "./normalize.css";
 import './App.css';
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchInterval: false
+    },
+    mutations: {
+      retry: false,
+    }
+  }
+})
 
 const App: React.FC = () => {
 
