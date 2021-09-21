@@ -1,14 +1,11 @@
 import { BaseApi } from "./BaseApi";
 
-interface RegisterRequestBody {
-  username: string;
-  password: string;
-}
-
 interface LoginRequestBody {
   username: string;
   password: string;
 }
+
+interface RegisterRequestBody extends LoginRequestBody {}
 
 type UserData = {
   name: string;
@@ -23,9 +20,11 @@ interface LoginResponse {
   user: UserData;
 }
 
+interface RegisterResponse extends LoginResponse {}
+
 export class AuthApi extends BaseApi {
   static register = async (body: RegisterRequestBody) =>
-    this.postRequest("/register", body);
+    this.postRequest<RegisterResponse>("/register", body);
 
   static login = async (body: LoginRequestBody) =>
     this.postRequest<LoginResponse>("/login", body);
