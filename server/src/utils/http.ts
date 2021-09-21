@@ -6,7 +6,7 @@ export const getRequestUser = (request: Request): UserData | null => {
   const requestCookie = request.headers.cookie;
   if (!requestCookie) return null;
 
-  const token = /access_token=([\w\.]+)/.exec(requestCookie);
+  const token = /access_token=([\w\.-]+)/.exec(requestCookie);
 
   if (!token || !token[1]) return null;
 
