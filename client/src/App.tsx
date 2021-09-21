@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 
+import { UserContextProvider } from "./providers/UserProvider";
 import { Header } from "./components/Header";
 import { Home } from "./pages/Home";
 import { Register } from "./pages/Register";
@@ -15,14 +16,16 @@ const App: React.FC = () => {
 
   return <Router>
     <QueryClientProvider client={queryClient}>
-      <Header />
-      <main className="main">
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/login" component={Login} />
-        </Switch>
-      </main>
+      <UserContextProvider>
+        <Header />
+        <main className="main">
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/login" component={Login} />
+          </Switch>
+        </main>
+      </UserContextProvider>
     </QueryClientProvider>
   </Router>
 
