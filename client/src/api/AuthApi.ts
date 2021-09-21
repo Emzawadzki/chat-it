@@ -10,11 +10,17 @@ interface LoginRequestBody {
   password: string;
 }
 
+type UserData = {
+  name: string;
+  id: number;
+} | null;
+
 interface GetUserResponse {
-  user: {
-    name: string;
-    id: number;
-  } | null;
+  user: UserData;
+}
+
+interface LoginResponse {
+  user: UserData;
 }
 
 export class AuthApi extends BaseApi {
@@ -22,7 +28,7 @@ export class AuthApi extends BaseApi {
     this.postRequest("/register", body);
 
   static login = async (body: LoginRequestBody) =>
-    this.postRequest("/login", body);
+    this.postRequest<LoginResponse>("/login", body);
 
   static logout = async () => this.postRequest("/logout", {});
 
