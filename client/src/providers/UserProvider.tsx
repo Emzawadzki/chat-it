@@ -26,15 +26,11 @@ export const useUserContext = () => useContext(UserContext);
 
 export const UserContextProvider: React.FC = ({ children }) => {
   const [user, setUser] = useState<UserContextValue["user"]>();
-  const { data } = useQuery(QUERY.USER, AuthApi.getUser);
-
-  useEffect(() => {
-    console.log("UEff", data);
-
-    if (data) {
-      setUser(data.user ?? null);
+  useQuery(QUERY.USER, AuthApi.getUser, {
+    onSuccess: data => {
+      setUser(data.user)
     }
-  }, [data])
+  });
 
   return <UserContext.Provider value={{ user, setUser }}>
     {children}
