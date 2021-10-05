@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { useQuery } from "react-query";
 
 import { AuthApi } from "../api/AuthApi";
