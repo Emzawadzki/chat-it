@@ -3,7 +3,7 @@ import { getRepository } from "typeorm";
 
 import { User } from "../entity/User";
 import { ResponseBody } from "../types/http";
-import { getRequestUser } from "../utils/http";
+import { getHttpUser } from "../utils/http";
 import { BaseController } from "./BaseController";
 
 export class UserController extends BaseController {
@@ -13,7 +13,7 @@ export class UserController extends BaseController {
     next
   ) => {
     try {
-      const requestUser = getRequestUser(request);
+      const requestUser = getHttpUser(request.headers);
       if (!requestUser) {
         return response.status(200).json({ user: null });
       }

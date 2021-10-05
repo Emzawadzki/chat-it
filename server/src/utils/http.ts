@@ -1,9 +1,9 @@
-import { Request } from "express";
+import { IncomingHttpHeaders } from "http";
 
 import { decodeJWT } from "./jwt";
 
-export const getRequestUser = (request: Request): UserData | null => {
-  const requestCookie = request.headers.cookie;
+export const getHttpUser = (headers: IncomingHttpHeaders): UserData | null => {
+  const requestCookie = headers.cookie;
   if (!requestCookie) return null;
 
   const token = /access_token=([\w\.-]+)/.exec(requestCookie);

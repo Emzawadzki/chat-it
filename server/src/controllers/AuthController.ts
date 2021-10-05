@@ -6,7 +6,7 @@ import { User } from "../entity/User";
 import { encodeJWT } from "../utils/jwt";
 import { TOKEN_COOKIE, TOKEN_COOKIE_OPTIONS } from "../config/consts";
 import { RequestBody, ResponseBody } from "../types/http";
-import { getRequestUser } from "../utils/http";
+import { getHttpUser } from "../utils/http";
 
 import { BaseController } from "./BaseController";
 
@@ -87,7 +87,7 @@ export class AuthController extends BaseController {
 
   static logout: RequestHandler = (request, response, next) => {
     try {
-      const requestUser = getRequestUser(request);
+      const requestUser = getHttpUser(request.headers);
       let responseStatus = requestUser ? 200 : 401;
       return response
         .cookie(TOKEN_COOKIE, "", {

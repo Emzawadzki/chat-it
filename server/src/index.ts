@@ -2,11 +2,17 @@ import "reflect-metadata";
 import dotenv from "dotenv";
 import express from "express";
 import { createConnection } from "typeorm";
+import { Server as WsServer } from "ws";
+import http from "http";
+import { Socket } from "net";
 
 import { User } from "./entity/User";
+import { Conversation } from "./entity/Conversation";
+import { Message } from "./entity/Message";
 
 import { AuthController } from "./controllers/AuthController";
 import { UserController } from "./controllers/UserController";
+import { ChatController } from "./controllers/ChatController";
 import { authMiddleware } from "./middlewares/authMiddleware";
 
 // @TODO: handle different environments
@@ -21,14 +27,14 @@ createConnection({
   username: DB_USER,
   password: DB_PASS,
   database: DB_NAME,
-  entities: [User],
+  entities: [User, Conversation, Message],
   synchronize: true,
   logging: false,
 })
   .then(() => {
-    const server = express();
+    const app = express();
 
-    server.use(express.json());
+    app.use(express.json());
 
     const openRouter = express.Router();
     openRouter.post("/login", AuthController.login);
@@ -39,11 +45,27 @@ createConnection({
     const protectedRouter = express.Router();
     protectedRouter.use(authMiddleware);
 
-    server.use("/api", openRouter);
-    server.use("/api", protectedRouter);
+    app.use("/api", openRouter);
+    app.use("/api", protectedRouter);
 
+    const server = http.createServer(app);
+    const wsServer = new WsServer({ path: "/ws/chat", noServer: true });
+
+    // expressServer.on("upgrade", (request, socket, head) => {
+    //   websocketServer.handleUpgrade(request, socket, head, (websocket) => {
+    //     websocketServer.emit("connection", websocket, request);
+    //   });
+    // });
     server.listen(5000, () => {
       console.log("Server listening on port 5000...");
     });
+
+    server.on("upgrade", (request, socket, head) => {
+      wsServer.handleUpgrade(request, socket as Socket, head, (ws) => {
+        ChatController.handleConnectionUpgrade(ws, request);
+      });
+    });
+
+    // wsServer.on("connection", ChatController.handleConnection);
   })
   .catch((error) => console.log(error));
