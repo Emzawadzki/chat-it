@@ -3,6 +3,8 @@ import { useMutation } from "react-query";
 import { AuthApi } from "../../../api/AuthApi";
 import { useUserContext } from "../../../providers/UserProvider";
 
+import "./LogoutButton.css";
+
 export const LogoutButton: React.FC = () => {
   const { mutate } = useMutation(AuthApi.logout);
   const { setUser } = useUserContext();
@@ -15,7 +17,7 @@ export const LogoutButton: React.FC = () => {
     });
   }
 
-  return <button onClick={handleClick}>
+  return <button className="LogoutButton" onClick={handleClick}>
     Logout
   </button>
 }

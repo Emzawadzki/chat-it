@@ -23,7 +23,9 @@ export const Header: React.FC = () => {
       </>}
       {isLoggedIn && <li className="Header__list-item"><NavLink className="Header__link" to="/chat">Chat</NavLink></li>}
     </ul>
-    <p className="Header__user-info">{userInfo}</p>
-    {isLoggedIn && <LogoutButton />}
+    <div className="Header__auth-box">
+      <p className="Header__user-info">{userInfo}</p>
+      {isLoggedIn && <LogoutButton />}
+    </div>
   </header>
 }

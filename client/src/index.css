@@ -11,6 +11,7 @@
   --color-secondary-500: #9d4edd;
   --color-text: #eee;
   --color-text-inversed: #111;
+  --transition-time: 0.3s;
 }
 
 body,

@@ -1,0 +1,12 @@
+.LogoutButton {
+  background-color: var(--color-secondary-100);
+  color: var(--color-text);
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: var(--transition-time) background-color;
+}
+
+.LogoutButton:hover {
+  background-color: var(--color-secondary-200);
+}
