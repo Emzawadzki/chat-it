@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { UserContextProvider } from "./providers/UserProvider";
 import { Header } from "./components/Header";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { GuestRoute } from "./components/GuestRoute";
 
 import { Home } from "./pages/Home";
 import { Register } from "./pages/Register";
@@ -38,8 +39,8 @@ const App: React.FC = () => (
       <main className="main">
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/login" component={Login} />
+          <GuestRoute exact path="/register" component={Register} />
+          <GuestRoute exact path="/login" component={Login} />
           <ProtectedRoute exact path="/chat" component={Chat} />
         </Switch>
       </main>
