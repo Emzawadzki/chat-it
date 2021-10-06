@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import { useQuery } from "react-query";
 
-import { AuthApi } from "../api/AuthApi";
+import { UserApi } from "../api/UserApi";
 import { QUERY } from "../config/queries";
 
 interface UserContextValue {
@@ -26,7 +26,7 @@ export const useUserContext = () => useContext(UserContext);
 
 export const UserContextProvider: React.FC = ({ children }) => {
   const [user, setUser] = useState<UserContextValue["user"]>();
-  useQuery(QUERY.USER, AuthApi.getUser, {
+  useQuery(QUERY.USER, UserApi.getUser, {
     onSuccess: data => {
       setUser(data.user)
     }
