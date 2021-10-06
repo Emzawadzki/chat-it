@@ -1,6 +1,6 @@
 import { IncomingMessage } from "http";
 import { getRepository } from "typeorm";
-import WebSocket, { RawData } from "ws";
+import WebSocket, { RawData, Server as WsServer } from "ws";
 
 import { Conversation } from "../entity/Conversation";
 import { Message } from "../entity/Message";
@@ -9,6 +9,8 @@ import { getHttpUser } from "../utils/http";
 import { BaseController } from "./BaseController";
 
 export class ChatController extends BaseController {
+  private static activeConnections: { [key: number]: WebSocket } = {};
+
   static handleConnectionUpgrade = async (
     ws: WebSocket,
     request: IncomingMessage
@@ -26,7 +28,8 @@ export class ChatController extends BaseController {
       ws.terminate();
       return;
     }
-    // store connected users on server?
+
+    this.activeConnections[userFound.id] = ws;
     ws.on("message", (msg) => this.handleMessage(msg, userFound));
   };
 
@@ -78,16 +81,13 @@ export class ChatController extends BaseController {
         conversation,
         text: parsedMessage.content,
       });
+      if (this.activeConnections[addressee.id]) {
+        this.activeConnections[addressee.id].send(
+          JSON.stringify(parsedMessage)
+        );
+      }
     } catch (e) {
       // send WS error
     }
-
-    // if (message.type === "NEW_MESSAGE") {
-    //   wss.clients.forEach((client) => {
-    //     if (client !== ws && client.readyState === WebSocket.OPEN) {
-    //       client.send(data);
-    //     }
-    //   });
-    // }
   };
 }

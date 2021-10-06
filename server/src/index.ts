@@ -51,11 +51,6 @@ createConnection({
     const server = http.createServer(app);
     const wsServer = new WsServer({ path: "/ws/chat", noServer: true });
 
-    // expressServer.on("upgrade", (request, socket, head) => {
-    //   websocketServer.handleUpgrade(request, socket, head, (websocket) => {
-    //     websocketServer.emit("connection", websocket, request);
-    //   });
-    // });
     server.listen(5000, () => {
       console.log("Server listening on port 5000...");
     });
@@ -65,7 +60,5 @@ createConnection({
         ChatController.handleConnectionUpgrade(ws, request);
       });
     });
-
-    // wsServer.on("connection", ChatController.handleConnection);
   })
   .catch((error) => console.log(error));
