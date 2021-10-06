@@ -1,7 +1,7 @@
 import { BaseApi } from "./BaseApi";
 
 interface GetUserResponse {
-  user: UserData;
+  user: UserData | null;
 }
 
 interface GetAllResponse {
