@@ -81,12 +81,15 @@ export class ChatController extends BaseController {
         conversation,
         text: parsedMessage.content,
       });
+      const stringifiedMessage = JSON.stringify(parsedMessage);
       if (this.activeConnections[addressee.id]) {
-        this.activeConnections[addressee.id].send(
-          JSON.stringify(parsedMessage)
-        );
+        this.activeConnections[addressee.id].send(stringifiedMessage);
+      }
+      if (this.activeConnections[author.id]) {
+        this.activeConnections[author.id].send(stringifiedMessage);
       }
     } catch (e) {
+      console.log(e);
       // send WS error
     }
   };
