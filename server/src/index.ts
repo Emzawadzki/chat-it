@@ -44,6 +44,7 @@ createConnection({
 
     const protectedRouter = express.Router();
     protectedRouter.use(authMiddleware);
+    protectedRouter.get("/users", UserController.getAll);
 
     app.use("/api", openRouter);
     app.use("/api", protectedRouter);

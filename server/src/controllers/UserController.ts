@@ -32,4 +32,20 @@ export class UserController extends BaseController {
       return next(e);
     }
   };
+
+  static getAll: RequestHandler<{}, ResponseBody.AllUsers> = async (
+    request,
+    response,
+    next
+  ) => {
+    try {
+      const userRepository = getRepository(User);
+      const users = await userRepository.find();
+      response.status(200).json({
+        users: users.map(({ username, id }) => ({ name: username, id })),
+      });
+    } catch (e) {
+      return next(e);
+    }
+  };
 }

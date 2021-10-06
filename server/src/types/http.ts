@@ -19,4 +19,7 @@ export namespace ResponseBody {
   export interface User {
     user: UserData | null;
   }
+  export interface AllUsers {
+    users: UserData[];
+  }
 }
