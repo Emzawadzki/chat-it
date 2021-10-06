@@ -1,0 +1,30 @@
+.MessagesList {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  padding: 0;
+  margin: 0 auto;
+}
+
+.MessagesList__item {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--color-secondary-200);
+  color: var(--color-text);
+  align-self: flex-start;
+}
+
+.MessagesList__item--received {
+  background: var(--color-primary-500);
+  color: var(--color-text-inversed);
+  text-align: right;
+  align-self: flex-end;
+}
+
+.MessagesList__item:not(.MessagesList__item--received)
+  + .MessagesList__item:not(.MessagesList__item--received),
+.MessagesList__item--received + .MessagesList__item--received {
+  margin-top: 3px;
+}
