@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import { UserContextProvider } from "./providers/UserProvider";
@@ -10,6 +10,7 @@ import { Home } from "./pages/Home";
 import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
 import { Users } from "./pages/Users";
+import { Chat } from "./pages/Chat";
 
 import "./normalize.css";
 import './App.css';
@@ -42,7 +43,8 @@ const App: React.FC = () => (
           <GuestRoute exact path="/register" component={Register} />
           <GuestRoute exact path="/login" component={Login} />
           <ProtectedRoute exact path="/users" component={Users} />
-          {/* <ProtectedRoute exact path="/chat" component={Users} /> */}
+          <ProtectedRoute exact path="/chat/:id" component={Chat} />
+          <Route><Redirect to="/" /></Route>
         </Switch>
       </main>
     </AppProviders>
