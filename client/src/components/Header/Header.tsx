@@ -21,7 +21,7 @@ export const Header: React.FC = () => {
         <li className="Header__list-item"><NavLink className="Header__link" to="/register">Register</NavLink></li>
         <li className="Header__list-item"><NavLink className="Header__link" to="/login">Login</NavLink></li>
       </>}
-      {isLoggedIn && <li className="Header__list-item"><NavLink className="Header__link" to="/chat">Chat</NavLink></li>}
+      {isLoggedIn && <li className="Header__list-item"><NavLink className="Header__link" to="/users">Users</NavLink></li>}
     </ul>
     <div className="Header__auth-box">
       <p className="Header__user-info">{userInfo}</p>
