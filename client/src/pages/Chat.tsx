@@ -2,7 +2,7 @@ import { FormEventHandler, useEffect, useRef, useState } from "react";
 import { Redirect, useParams } from "react-router-dom"
 
 import { ChatApi } from "../api/ChatApi";
-import { MessagesList } from "../components/MessagesList/MessagesList";
+import { MessagesList } from "../components/MessagesList";
 import { useUserContext } from "../providers/UserProvider";
 
 export const Chat: React.FC = () => {
