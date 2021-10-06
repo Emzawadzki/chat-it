@@ -13,7 +13,6 @@ import { Users } from "./pages/Users";
 import { Chat } from "./pages/Chat";
 
 import "./normalize.css";
-import './App.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {
