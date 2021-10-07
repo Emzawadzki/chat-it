@@ -1,0 +1,30 @@
+.MessageForm {
+  margin: 10px 0 0;
+  display: flex;
+}
+
+.MessageForm__input {
+  flex-grow: 1;
+  padding: 10px;
+  border-radius: 10px 0 0 10px;
+  border: 2px solid var(--color-secondary-100);
+}
+
+.MessageForm__input:hover,
+.MessageForm__input:focus {
+  outline: 0;
+  border-color: var(--color-secondary-200);
+}
+
+.MessageForm__button {
+  border-radius: 0 10px 10px 0;
+  padding: 10px;
+  border: 0;
+  background: var(--color-secondary-100);
+  color: var(--color-text);
+}
+
+.MessageForm__button:hover,
+.MessageForm__button:focus {
+  background: var(--color-secondary-200);
+}

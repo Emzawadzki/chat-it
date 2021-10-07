@@ -1,16 +1,18 @@
-import { FormEventHandler, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Redirect, useParams } from "react-router-dom"
 
 import { ChatApi } from "../api/ChatApi";
+import { MessageForm } from "../components/MessageForm";
 import { MessagesList } from "../components/MessagesList";
 import { useUserContext } from "../providers/UserProvider";
+
+import "./Chat.css";
 
 export const Chat: React.FC = () => {
   const params = useParams<{ id?: string }>();
   const { user } = useUserContext();
 
-  const ws = useRef<WebSocket>();
-  const [message, setMessage] = useState("");
+  const [ws, setWs] = useState<WebSocket>();
   const [messages, setMessages] = useState<ChatMessage[]>([])
 
   const validateMessage = (msg: unknown): msg is ChatMessage => {
@@ -18,9 +20,9 @@ export const Chat: React.FC = () => {
   }
 
   useEffect(() => {
-    if (params.id && user) {
-      ws.current = ChatApi.createWebSocket();
-      ws.current.onmessage = (ev: MessageEvent<any>) => {
+    if (params.id && !ws) {
+      const webSocket = ChatApi.createWebSocket();
+      webSocket.onmessage = (ev: MessageEvent<any>) => {
         try {
           const jsonMessage = JSON.parse(ev.data)
           if (!validateMessage(jsonMessage)) throw new Error("Message format invalid!")
@@ -29,27 +31,14 @@ export const Chat: React.FC = () => {
           console.log(e)
         }
       }
+      setWs(webSocket);
     }
-  }, [params.id, user])
+  }, [params.id, ws])
 
   if (!params.id) return <Redirect to="/" />
 
-  const sendMessage: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-    const jsonMessage: SentChatMessage = {
-      type: "NEW_MESSAGE",
-      addresseeId: Number(params.id),
-      content: message
-    }
-    ws.current?.send(JSON.stringify(jsonMessage));
-    setMessage("");
-  }
-
-  return <>
+  return <div className="Chat">
     <MessagesList messages={messages} userId={user!.id} />
-    <form onSubmit={sendMessage}>
-      <input type="text" name="message" id="message" value={message} onChange={e => { setMessage(e.target.value) }} />
-      <input type="submit" value="Send" />
-    </form>
-  </>
+    <MessageForm addresseeId={Number(params.id)} webSocket={ws} />
+  </div>
 }

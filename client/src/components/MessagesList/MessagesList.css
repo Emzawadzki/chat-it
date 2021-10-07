@@ -2,9 +2,8 @@
   list-style-type: none;
   display: flex;
   flex-direction: column;
-  max-width: 500px;
   padding: 0;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .MessagesList__item {
