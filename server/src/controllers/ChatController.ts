@@ -1,6 +1,6 @@
 import { IncomingMessage } from "http";
 import { getRepository } from "typeorm";
-import WebSocket, { RawData, Server as WsServer } from "ws";
+import WebSocket, { RawData } from "ws";
 
 import { Conversation } from "../entity/Conversation";
 import { Message } from "../entity/Message";
