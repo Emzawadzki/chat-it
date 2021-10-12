@@ -5,7 +5,7 @@ import { ConversationApi } from "../api/ConversationApi"
 import { QUERY } from "../config/queries"
 
 export const Conversations: React.FC = () => {
-  const { data } = useQuery(QUERY.ALL_CONVERSATIONS, ConversationApi.getAll);
+  const { data } = useQuery(QUERY.ALL_CONVERSATIONS, ConversationApi.getList);
 
   return <ul>
     {data?.conversations.map(user => (
