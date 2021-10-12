@@ -1,4 +1,5 @@
 export enum QUERY {
   USER = "USER",
   ALL_USERS = "ALL_USERS",
+  ALL_CONVERSATIONS = "ALL_CONVERSATIONS",
 }

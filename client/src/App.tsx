@@ -11,6 +11,7 @@ import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
 import { Users } from "./pages/Users";
 import { Chat } from "./pages/Chat";
+import { Conversations } from "./pages/Conversations";
 
 import "./normalize.css";
 
@@ -42,6 +43,7 @@ const App: React.FC = () => (
           <GuestRoute exact path="/register" component={Register} />
           <GuestRoute exact path="/login" component={Login} />
           <ProtectedRoute exact path="/users" component={Users} />
+          <ProtectedRoute exact path="/conversations" component={Conversations} />
           <ProtectedRoute exact path="/chat/:id" component={Chat} />
           <Route><Redirect to="/" /></Route>
         </Switch>
