@@ -12,13 +12,14 @@ export const MessageForm: React.FC<MessageFormProps> = ({ addresseeId, webSocket
 
   const sendMessage: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    if (!webSocket) {
+    const trimmedMessage = message.trim();
+    if (!webSocket || !trimmedMessage) {
       return;
     }
     const jsonMessage: SentChatMessage = {
       type: "NEW_MESSAGE",
       addresseeId,
-      content: message
+      content: trimmedMessage
     }
     webSocket.send(JSON.stringify(jsonMessage));
     setMessage("");
