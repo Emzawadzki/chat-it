@@ -14,6 +14,7 @@ import { AuthController } from "./controllers/AuthController";
 import { UserController } from "./controllers/UserController";
 import { ChatController } from "./controllers/ChatController";
 import { authMiddleware } from "./middlewares/authMiddleware";
+import { ConversationController } from "./controllers/ConversationController";
 
 // @TODO: handle different environments
 dotenv.config({ path: "../development.env" });
@@ -45,6 +46,7 @@ createConnection({
     const protectedRouter = express.Router();
     protectedRouter.use(authMiddleware);
     protectedRouter.get("/users", UserController.getAll);
+    protectedRouter.get("/conversations", ConversationController.getAll);
 
     app.use("/api", openRouter);
     app.use("/api", protectedRouter);
