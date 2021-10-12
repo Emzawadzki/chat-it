@@ -110,3 +110,6 @@ build/
 ormconfig.json
 
 *.env
+
+.vscode/
+*.session.sql
