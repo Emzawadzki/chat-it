@@ -1,5 +1,5 @@
 import { IncomingMessage } from "http";
-import { getRepository } from "typeorm";
+import { getRepository, In } from "typeorm";
 import WebSocket, { RawData } from "ws";
 
 import { Conversation } from "../entity/Conversation";
@@ -23,6 +23,7 @@ export class ChatController extends BaseController {
     const userRepository = getRepository(User);
     const userFound = await userRepository.findOne({
       where: { username: user.name },
+      relations: ["conversations"],
     });
     if (!userFound) {
       ws.terminate();
@@ -58,17 +59,21 @@ export class ChatController extends BaseController {
       }
       const userRepository = getRepository(User);
       const addressee = await userRepository.findOne({
+        relations: ["conversations"],
         where: { id: parsedMessage.addresseeId },
       });
       if (!addressee) {
         throw new Error("Message addressee not found");
       }
 
-      let conversation =
-        author.conversations &&
-        author.conversations.find((conversation) =>
-          conversation.attendees.includes(addressee)
-        );
+      const addresseeConversationsIds = addressee.conversations.map(
+        (conv) => conv.id
+      );
+
+      let conversation = author.conversations.find((conv) =>
+        addresseeConversationsIds.includes(conv.id)
+      );
+
       if (!conversation) {
         const conversationRepository = getRepository(Conversation);
         conversation = await conversationRepository.save({
