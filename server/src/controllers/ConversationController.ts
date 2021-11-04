@@ -36,12 +36,15 @@ export class ConversationController extends BaseController {
           convIds: userConversationsIds,
         })
         .andWhere("user.id != :authorId", { authorId: userFound.id })
-        .select("user.id")
-        .addSelect("user.username")
+        .select("user.username")
+        .addSelect("conversation.id")
         .getMany();
 
       return response.status(200).json({
-        conversations: conversationsUsers,
+        conversations: conversationsUsers.map((user) => ({
+          username: user.username,
+          conversationId: user.conversations[0].id,
+        })),
       });
     } catch (e) {
       next(e);
