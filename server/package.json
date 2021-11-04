@@ -1,6 +1,6 @@
 {
   "name": "chat-it-server",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "NodeJS chat server, including JWT token authorization & authentication and WebSocket-based chat",
   "main": "index.js",
   "scripts": {
