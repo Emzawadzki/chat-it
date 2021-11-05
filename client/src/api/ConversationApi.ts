@@ -20,9 +20,19 @@ interface GetByIdResponse {
   attendees: Attendee[];
 }
 
+interface CreateRequestBody {
+  attendeeIds: number[];
+}
+
+interface CreateResponse {
+  conversationId: number;
+}
+
 export class ConversationApi extends BaseApi {
   static getList = async () =>
     this.getRequest<GetListResponse>("/conversations");
   static getById = async (conversationId: number) =>
     this.getRequest<GetByIdResponse>(`/conversations/${conversationId}`);
+  static create = async (body: CreateRequestBody) =>
+    this.postRequest<CreateResponse>("/conversations/new", body);
 }
