@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import { getRepository } from "typeorm";
 
+import { Conversation } from "../entity/Conversation";
 import { Message } from "../entity/Message";
 import { User } from "../entity/User";
 import { getHttpUser } from "../utils/http";
@@ -52,7 +53,7 @@ export class ConversationController extends BaseController {
     }
   };
 
-  static getMessages: RequestHandler = async (request, response, next) => {
+  static getById: RequestHandler = async (request, response, next) => {
     try {
       const conversationId = parseInt(request.params.id);
       if (typeof conversationId !== "number" || Number.isNaN(conversationId)) {
@@ -94,8 +95,23 @@ export class ConversationController extends BaseController {
         .addSelect("user.id", "authorId")
         .getRawMany();
 
+      const conversationWithAttendees = await getRepository(Conversation)
+        .createQueryBuilder("c")
+        .leftJoinAndSelect("c.attendees", "user")
+        .where("c.id = :conversationId", { conversationId })
+        .getOne();
+
+      if (!conversationWithAttendees) {
+        return response.sendStatus(404);
+      }
+
+      const attendees = conversationWithAttendees.attendees.map(
+        ({ id, username }) => ({ id, username })
+      );
+
       return response.status(200).json({
         messages,
+        attendees,
       });
     } catch (e) {
       next(e);
