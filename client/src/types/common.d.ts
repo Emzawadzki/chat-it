@@ -5,5 +5,5 @@ type UserData = {
 
 type ConversationListData = {
   username: string;
-  id: number;
+  conversationId: number;
 };
