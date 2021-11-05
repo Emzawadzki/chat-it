@@ -1,5 +1,5 @@
 interface NewMessage {
   type: "NEW_MESSAGE";
-  content: string;
-  addresseeId: number;
+  text: string;
+  conversationId: number;
 }

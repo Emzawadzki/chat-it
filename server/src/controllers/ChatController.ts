@@ -41,8 +41,8 @@ export class ChatController extends BaseController {
       return (
         typeof message === "object" &&
         message !== null &&
-        message.hasOwnProperty("content") &&
-        message.hasOwnProperty("addresseeId") &&
+        message.hasOwnProperty("text") &&
+        message.hasOwnProperty("conversationId") &&
         message.hasOwnProperty("type") &&
         (message as { type: string })["type"] === "NEW_MESSAGE"
       );
@@ -57,42 +57,61 @@ export class ChatController extends BaseController {
       if (!this.validateMessage(parsedMessage)) {
         throw new Error("Message type invalid");
       }
-      const userRepository = getRepository(User);
-      const addressee = await userRepository.findOne({
-        relations: ["conversations"],
-        where: { id: parsedMessage.addresseeId },
-      });
-      if (!addressee) {
-        throw new Error("Message addressee not found");
+
+      if (
+        !author.conversations.find(
+          (conversation) => conversation.id === parsedMessage.conversationId
+        )
+      ) {
+        throw new Error("Author has no conversation with provided id");
       }
 
-      const addresseeConversationsIds = addressee.conversations.map(
-        (conv) => conv.id
-      );
+      const conversationAttendees = await getRepository(Conversation)
+        .createQueryBuilder("c")
+        .leftJoinAndSelect("c.attendees", "user")
+        .where("c.id = :conversationId", {
+          conversationId: parsedMessage.conversationId,
+        })
+        .getOne();
 
-      let conversation = author.conversations.find((conv) =>
-        addresseeConversationsIds.includes(conv.id)
-      );
-
-      if (!conversation) {
-        const conversationRepository = getRepository(Conversation);
-        conversation = await conversationRepository.save({
-          attendees: [author, addressee],
-        });
+      if (!conversationAttendees) {
+        throw new Error("Conversation not found");
       }
-      const messageRepository = getRepository(Message);
-      await messageRepository.save({
+
+      await getRepository(Message).save({
         author,
-        conversation,
-        text: parsedMessage.content,
+        conversation: conversationAttendees,
+        text: parsedMessage.text,
       });
-      const stringifiedMessage = JSON.stringify(parsedMessage);
-      if (this.activeConnections[addressee.id]) {
-        this.activeConnections[addressee.id].send(stringifiedMessage);
-      }
-      if (this.activeConnections[author.id]) {
-        this.activeConnections[author.id].send(stringifiedMessage);
-      }
+
+      const createdMessage = await getRepository(Message)
+        .createQueryBuilder("m")
+        .leftJoin("m.conversation", "c")
+        .where("c.id = :conversationId", {
+          conversationId: parsedMessage.conversationId,
+        })
+        .select("m")
+        .addSelect("c.id")
+        .orderBy("m.id", "DESC")
+        .limit(1)
+        .getOne();
+
+      const messageToResend = {
+        conversationId: createdMessage?.conversation.id,
+        text: createdMessage?.text,
+        id: createdMessage?.id,
+        authorId: author.id,
+      };
+
+      const { attendees } = conversationAttendees;
+
+      const stringifiedMessage = JSON.stringify(messageToResend);
+
+      attendees.forEach(({ id }) => {
+        if (this.activeConnections[id]) {
+          this.activeConnections[id].send(stringifiedMessage);
+        }
+      });
     } catch (e) {
       console.log(e);
       // send WS error
