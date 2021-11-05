@@ -47,7 +47,10 @@ createConnection({
     protectedRouter.use(authMiddleware);
     protectedRouter.get("/users", UserController.getAll);
     protectedRouter.get("/conversations", ConversationController.getAll);
-    protectedRouter.get("/conversations/:id", ConversationController.getById);
+    protectedRouter.get(
+      "/conversations/:id/messages",
+      ConversationController.getMessages
+    );
 
     app.use("/api", openRouter);
     app.use("/api", protectedRouter);

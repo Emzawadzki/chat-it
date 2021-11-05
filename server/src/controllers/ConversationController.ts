@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import { getRepository } from "typeorm";
-import { Conversation } from "../entity/Conversation";
 
+import { Message } from "../entity/Message";
 import { User } from "../entity/User";
 import { getHttpUser } from "../utils/http";
 import { BaseController } from "./BaseController";
@@ -52,7 +52,7 @@ export class ConversationController extends BaseController {
     }
   };
 
-  static getById: RequestHandler = async (request, response, next) => {
+  static getMessages: RequestHandler = async (request, response, next) => {
     try {
       const conversationId = parseInt(request.params.id);
       if (typeof conversationId !== "number" || Number.isNaN(conversationId)) {
@@ -85,22 +85,17 @@ export class ConversationController extends BaseController {
         return;
       }
 
-      const conversation = await getRepository(Conversation).findOne({
-        join: {
-          alias: "c",
-          innerJoinAndSelect: {
-            messages: "c.messages",
-          },
-        },
-        where: { id: conversationId },
-      });
-
-      if (!conversation) {
-        return response.sendStatus(404);
-      }
+      const messages = await getRepository(Message)
+        .createQueryBuilder("m")
+        .innerJoin("m.author", "user")
+        .where("m.conversation.id = :conversationId", { conversationId })
+        .select("m.id", "id")
+        .addSelect("m.text", "text")
+        .addSelect("user.id", "authorId")
+        .getRawMany();
 
       return response.status(200).json({
-        messages: conversation.messages,
+        messages,
       });
     } catch (e) {
       next(e);
