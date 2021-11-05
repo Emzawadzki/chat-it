@@ -129,18 +129,9 @@ export class ConversationController extends BaseController {
     try {
       const { attendeeIds } = request.body;
 
-      const isBodyValid =
-        Array.isArray(attendeeIds) &&
-        attendeeIds.find((id) => typeof id !== "number" || Number.isNaN(id)) ===
-          undefined &&
-        attendeeIds.length > 0;
-      if (!isBodyValid) {
-        return response.sendStatus(400);
-      }
-
       const author = await getRepository(User)
         .createQueryBuilder("u")
-        .select("u")
+        .leftJoinAndSelect("u.conversations", "conversation")
         .where("u.id = :userId", { userId: request.user!.id })
         .getOne();
 
@@ -148,11 +139,58 @@ export class ConversationController extends BaseController {
         return response.sendStatus(401);
       }
 
+      const isBodyValid =
+        Array.isArray(attendeeIds) &&
+        attendeeIds.find(
+          (id) => typeof id !== "number" || Number.isNaN(id) || id === author.id
+        ) === undefined &&
+        attendeeIds.length > 0;
+      if (!isBodyValid) {
+        return response.sendStatus(400);
+      }
+
       const attendees = await getRepository(User)
         .createQueryBuilder("u")
         .select("u")
         .where("u.id IN (:...userIds)", { userIds: attendeeIds })
         .getMany();
+
+      const allAttendeeIds = [...attendeeIds, author.id];
+
+      const authorConversations =
+        author.conversations.length > 0
+          ? await getRepository(Conversation)
+              .createQueryBuilder("c")
+              .leftJoinAndSelect("c.attendees", "user")
+              .where("c.id IN (:...authorConversationIds)", {
+                authorConversationIds: author.conversations.map((c) => c.id),
+              })
+              .getMany()
+          : [];
+
+      // Check whether conversations with these exact users already exists
+      const alreadyExistingConversation = authorConversations.find(
+        (conversation) => {
+          if (conversation.attendees.length !== allAttendeeIds.length) {
+            return false;
+          }
+
+          for (let attendeeId of allAttendeeIds) {
+            const attendeeFound = conversation.attendees.find(
+              (att) => att.id === attendeeId
+            );
+            if (!attendeeFound) return false;
+          }
+
+          return true;
+        }
+      );
+
+      if (alreadyExistingConversation) {
+        return response
+          .status(200)
+          .json({ conversationId: alreadyExistingConversation.id });
+      }
 
       await getRepository(Conversation).save({
         attendees: [...attendees, author],
