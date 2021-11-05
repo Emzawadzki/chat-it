@@ -10,6 +10,10 @@ export namespace RequestBody {
     password?: string;
     username?: string;
   }
+
+  export interface NewConversation {
+    attendeeIds?: number[];
+  }
 }
 
 export namespace ResponseBody {
@@ -21,5 +25,8 @@ export namespace ResponseBody {
   }
   export interface AllUsers {
     users: UserData[];
+  }
+  export interface NewConversation {
+    conversationId: number;
   }
 }

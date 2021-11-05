@@ -4,6 +4,7 @@ import { getRepository } from "typeorm";
 import { Conversation } from "../entity/Conversation";
 import { Message } from "../entity/Message";
 import { User } from "../entity/User";
+import { RequestBody, ResponseBody } from "../types/http";
 import { getHttpUser } from "../utils/http";
 import { BaseController } from "./BaseController";
 
@@ -115,6 +116,63 @@ export class ConversationController extends BaseController {
         messages,
         attendees,
       });
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  static create: RequestHandler<
+    {},
+    ResponseBody.NewConversation,
+    RequestBody.NewConversation
+  > = async (request, response, next) => {
+    try {
+      const { attendeeIds } = request.body;
+
+      const isBodyValid =
+        Array.isArray(attendeeIds) &&
+        attendeeIds.find((id) => typeof id !== "number" || Number.isNaN(id)) ===
+          undefined &&
+        attendeeIds.length > 0;
+      if (!isBodyValid) {
+        return response.sendStatus(400);
+      }
+
+      const author = await getRepository(User)
+        .createQueryBuilder("u")
+        .select("u")
+        .where("u.id = :userId", { userId: request.user!.id })
+        .getOne();
+
+      if (!author) {
+        return response.sendStatus(401);
+      }
+
+      const attendees = await getRepository(User)
+        .createQueryBuilder("u")
+        .select("u")
+        .where("u.id IN (:...userIds)", { userIds: attendeeIds })
+        .getMany();
+
+      await getRepository(Conversation).save({
+        attendees: [...attendees, author],
+      });
+
+      const createdConversation = await getRepository(Conversation)
+        .createQueryBuilder("c")
+        .leftJoin("c.attendees", "user")
+        .where("user.id = :authorId", { authorId: author.id })
+        .select("c.id")
+        .orderBy("c.createdAt", "DESC")
+        .getOne();
+
+      if (!createdConversation) {
+        throw new Error("Created conversation doesn't exist");
+      }
+
+      return response
+        .status(201)
+        .json({ conversationId: createdConversation.id });
     } catch (e) {
       next(e);
     }

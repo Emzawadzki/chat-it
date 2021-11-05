@@ -1,4 +1,10 @@
-import { PrimaryGeneratedColumn, ManyToMany, OneToMany, Entity } from "typeorm";
+import {
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  OneToMany,
+  Entity,
+  CreateDateColumn,
+} from "typeorm";
 import { Message } from "./Message";
 
 import { User } from "./User";
@@ -13,4 +19,7 @@ export class Conversation {
 
   @OneToMany((type) => Message, (message) => message.conversation)
   messages: Message[];
+
+  @CreateDateColumn()
+  createdAt: Date;
 }
