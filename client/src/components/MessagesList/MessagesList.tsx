@@ -8,8 +8,8 @@ interface MessagesListProps {
 export const MessagesList: React.FC<MessagesListProps> = ({ messages, userId }) => {
   return <ul className="MessagesList">
     {messages.map((message, index) => (
-      <li className={`MessagesList__item${message.addresseeId === userId ? " MessagesList__item--received" : ""}`} key={index}>
-        {message.content}
+      <li className={`MessagesList__item${message.authorId !== userId ? " MessagesList__item--received" : ""}`} key={index}>
+        {message.text}
       </li>
     ))}
   </ul>

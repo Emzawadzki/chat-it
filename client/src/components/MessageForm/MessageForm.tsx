@@ -3,23 +3,23 @@ import { FormEventHandler, useState } from "react";
 import "./MessageForm.css";
 
 interface MessageFormProps {
-  addresseeId: number;
+  conversationId?: number;
   webSocket?: WebSocket;
 }
 
-export const MessageForm: React.FC<MessageFormProps> = ({ addresseeId, webSocket }) => {
+export const MessageForm: React.FC<MessageFormProps> = ({ conversationId, webSocket }) => {
   const [message, setMessage] = useState("");
 
   const sendMessage: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     const trimmedMessage = message.trim();
-    if (!webSocket || !trimmedMessage) {
+    if (!webSocket || !trimmedMessage || conversationId === undefined) {
       return;
     }
     const jsonMessage: SentChatMessage = {
       type: "NEW_MESSAGE",
-      addresseeId,
-      content: trimmedMessage
+      text: trimmedMessage,
+      conversationId
     }
     webSocket.send(JSON.stringify(jsonMessage));
     setMessage("");

@@ -1,8 +1,10 @@
 interface ChatMessage {
-  addresseeId: number;
-  content: string;
+  authorId: number;
+  text: string;
+  id: number;
 }
 
-interface SentChatMessage extends ChatMessage {
+interface SentChatMessage extends Pick<ChatMessage, "text"> {
   type: "NEW_MESSAGE";
+  conversationId: number;
 }
