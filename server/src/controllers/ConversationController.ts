@@ -92,6 +92,8 @@ export class ConversationController extends BaseController {
         .where("m.conversation.id = :conversationId", { conversationId })
         .select("m.id", "id")
         .addSelect("m.text", "text")
+        .addSelect("m.createdAt", "createdAt")
+        .orderBy("m.createdAt", "ASC")
         .addSelect("user.id", "authorId")
         .getRawMany();
 

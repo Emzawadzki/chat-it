@@ -1,4 +1,10 @@
-import { PrimaryGeneratedColumn, ManyToOne, Column, Entity } from "typeorm";
+import {
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  Column,
+  Entity,
+  CreateDateColumn,
+} from "typeorm";
 
 import { Conversation } from "./Conversation";
 import { User } from "./User";
@@ -16,4 +22,7 @@ export class Message {
 
   @ManyToOne((type) => User, (user) => user.messages)
   author: User;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

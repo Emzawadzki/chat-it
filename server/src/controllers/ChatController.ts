@@ -92,7 +92,7 @@ export class ChatController extends BaseController {
         })
         .select("m")
         .addSelect("c.id")
-        .orderBy("m.id", "DESC")
+        .orderBy("m.createdAt", "DESC")
         .limit(1)
         .getOne();
 
@@ -101,6 +101,7 @@ export class ChatController extends BaseController {
         text: createdMessage?.text,
         id: createdMessage?.id,
         authorId: author.id,
+        createdAt: createdMessage?.createdAt,
       };
 
       const { attendees } = conversationAttendees;
